@@ -1,0 +1,1628 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>AI Readiness Quiz | Limitless Club</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700;800&family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+/* ====================== CSS RESET & VARIABLES ====================== */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg-deep: #0f0b1e;
+  --bg-card: #1a1432;
+  --bg-card-hover: #241e3e;
+  --bg-card-selected: #2d2550;
+  --surface: #1e1838;
+  --indigo-dark: #1e1145;
+  --indigo: #4338ca;
+  --indigo-light: #6366f1;
+  --violet: #7c3aed;
+  --amber: #f59e0b;
+  --amber-light: #fbbf24;
+  --amber-glow: rgba(245, 158, 11, 0.15);
+  --gold: #d4a341;
+  --warm-white: #faf5eb;
+  --warm-gray: #b8b0c8;
+  --warm-gray-dim: #7a7290;
+  --text-primary: #faf5eb;
+  --text-secondary: #c4bcd6;
+  --text-dim: #8a82a0;
+  --gradient-hero: linear-gradient(135deg, #1a0e3e 0%, #2d1b69 30%, #1e1145 60%, #3d1f0a 100%);
+  --gradient-card: linear-gradient(145deg, rgba(99,102,241,0.08) 0%, rgba(245,158,11,0.05) 100%);
+  --gradient-accent: linear-gradient(135deg, #6366f1 0%, #f59e0b 100%);
+  --gradient-warm: linear-gradient(135deg, #4338ca 0%, #7c3aed 50%, #f59e0b 100%);
+  --radius-sm: 12px;
+  --radius-md: 18px;
+  --radius-lg: 24px;
+  --radius-xl: 32px;
+  --shadow-card: 0 4px 24px rgba(0,0,0,0.3), 0 1px 4px rgba(0,0,0,0.2);
+  --shadow-glow: 0 0 40px rgba(99,102,241,0.15), 0 0 80px rgba(245,158,11,0.08);
+  --font-thai: 'Prompt', sans-serif;
+  --font-en: 'Outfit', sans-serif;
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+html, body {
+  height: 100%;
+  font-family: var(--font-thai);
+  background: var(--bg-deep);
+  color: var(--text-primary);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
+}
+
+body {
+  position: relative;
+  min-height: 100dvh;
+}
+
+/* ====================== BACKGROUND EFFECTS ====================== */
+.bg-gradient {
+  position: fixed;
+  inset: 0;
+  background: var(--gradient-hero);
+  z-index: 0;
+}
+
+.bg-orbs {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.bg-orb {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(80px);
+  opacity: 0.35;
+  animation: orbFloat 20s ease-in-out infinite;
+}
+
+.bg-orb:nth-child(1) {
+  width: 300px; height: 300px;
+  background: radial-gradient(circle, rgba(99,102,241,0.5), transparent 70%);
+  top: -100px; left: -80px;
+  animation-delay: 0s;
+}
+.bg-orb:nth-child(2) {
+  width: 250px; height: 250px;
+  background: radial-gradient(circle, rgba(245,158,11,0.4), transparent 70%);
+  bottom: -80px; right: -60px;
+  animation-delay: -7s;
+}
+.bg-orb:nth-child(3) {
+  width: 200px; height: 200px;
+  background: radial-gradient(circle, rgba(124,58,237,0.35), transparent 70%);
+  top: 40%; left: 60%;
+  animation-delay: -14s;
+}
+
+@keyframes orbFloat {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  33% { transform: translate(30px, -40px) scale(1.1); }
+  66% { transform: translate(-20px, 30px) scale(0.95); }
+}
+
+/* ====================== PARTICLES ====================== */
+.particles {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.particle {
+  position: absolute;
+  width: 3px; height: 3px;
+  border-radius: 50%;
+  background: var(--amber-light);
+  opacity: 0;
+  animation: particleDrift 12s ease-in-out infinite;
+}
+
+@keyframes particleDrift {
+  0% { opacity: 0; transform: translateY(100vh) scale(0); }
+  10% { opacity: 0.6; }
+  90% { opacity: 0.6; }
+  100% { opacity: 0; transform: translateY(-20vh) scale(1); }
+}
+
+/* ====================== LAYOUT ====================== */
+.app {
+  position: relative;
+  z-index: 1;
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 16px;
+  overflow: hidden;
+}
+
+.screen {
+  width: 100%;
+  max-width: 520px;
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  animation: screenIn 0.6s var(--ease-out-expo) forwards;
+}
+
+.screen.active {
+  display: flex;
+}
+
+@keyframes screenIn {
+  from { opacity: 0; transform: translateY(30px) scale(0.97); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.screen.exiting {
+  animation: screenOut 0.35s var(--ease-out-expo) forwards;
+}
+
+@keyframes screenOut {
+  from { opacity: 1; transform: translateY(0) scale(1); }
+  to { opacity: 0; transform: translateY(-30px) scale(0.97); }
+}
+
+/* ====================== WELCOME SCREEN ====================== */
+.welcome {
+  text-align: center;
+  padding-top: 10vh;
+}
+
+.welcome-badge {
+  display: inline-block;
+  font-family: var(--font-en);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--amber);
+  background: var(--amber-glow);
+  border: 1px solid rgba(245,158,11,0.2);
+  padding: 6px 18px;
+  border-radius: 100px;
+  margin-bottom: 24px;
+  animation: fadeInUp 0.5s 0.05s var(--ease-out-expo) both;
+}
+
+.welcome-emoji {
+  font-size: 64px;
+  margin-bottom: 20px;
+  animation: fadeInUp 0.5s 0.1s var(--ease-out-expo) both;
+}
+
+.welcome h1 {
+  font-size: 28px;
+  font-weight: 700;
+  line-height: 1.4;
+  margin-bottom: 16px;
+  animation: fadeInUp 0.5s 0.15s var(--ease-out-expo) both;
+}
+
+.welcome h1 .gradient-text {
+  background: var(--gradient-accent);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.welcome p {
+  font-size: 16px;
+  color: var(--text-secondary);
+  line-height: 1.7;
+  margin-bottom: 36px;
+  animation: fadeInUp 0.5s 0.2s var(--ease-out-expo) both;
+}
+
+.welcome-features {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  margin-bottom: 40px;
+  flex-wrap: wrap;
+  animation: fadeInUp 0.5s 0.25s var(--ease-out-expo) both;
+}
+
+.welcome-feature {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  color: var(--text-dim);
+}
+
+.welcome-feature span {
+  font-size: 16px;
+}
+
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* ====================== BUTTONS ====================== */
+.btn-primary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  font-family: var(--font-thai);
+  font-size: 17px;
+  font-weight: 600;
+  color: #0f0b1e;
+  background: var(--gradient-warm);
+  border: none;
+  border-radius: 100px;
+  padding: 16px 40px;
+  cursor: pointer;
+  transition: all 0.3s var(--ease-out-expo);
+  box-shadow: 0 4px 24px rgba(99,102,241,0.3), 0 0 60px rgba(245,158,11,0.1);
+  animation: fadeInUp 0.5s 0.3s var(--ease-out-expo) both;
+  position: relative;
+  overflow: hidden;
+}
+
+.btn-primary::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, rgba(255,255,255,0.2) 0%, transparent 50%);
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+.btn-primary:hover { transform: translateY(-2px) scale(1.03); box-shadow: 0 8px 32px rgba(99,102,241,0.4), 0 0 80px rgba(245,158,11,0.15); }
+.btn-primary:hover::before { opacity: 1; }
+.btn-primary:active { transform: scale(0.97); }
+
+.btn-secondary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  font-family: var(--font-thai);
+  font-size: 15px;
+  font-weight: 500;
+  color: var(--text-secondary);
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 100px;
+  padding: 12px 28px;
+  cursor: pointer;
+  transition: all 0.3s var(--ease-out-expo);
+}
+
+.btn-secondary:hover { background: rgba(255,255,255,0.1); color: var(--text-primary); }
+
+.btn-line {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  font-family: var(--font-thai);
+  font-size: 17px;
+  font-weight: 600;
+  color: white;
+  background: #06C755;
+  border: none;
+  border-radius: 100px;
+  padding: 16px 40px;
+  cursor: pointer;
+  transition: all 0.3s var(--ease-out-expo);
+  box-shadow: 0 4px 24px rgba(6,199,85,0.3);
+  text-decoration: none;
+  width: 100%;
+  max-width: 360px;
+}
+
+.btn-line:hover { transform: translateY(-2px) scale(1.03); box-shadow: 0 8px 32px rgba(6,199,85,0.4); }
+.btn-line:active { transform: scale(0.97); }
+
+/* ====================== PROGRESS BAR ====================== */
+.progress-container {
+  width: 100%;
+  max-width: 520px;
+  margin-bottom: 24px;
+  animation: fadeInUp 0.4s var(--ease-out-expo) both;
+}
+
+.progress-info {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.progress-step {
+  font-family: var(--font-en);
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--amber);
+}
+
+.progress-label {
+  font-size: 12px;
+  color: var(--text-dim);
+}
+
+.progress-track {
+  width: 100%;
+  height: 6px;
+  background: rgba(255,255,255,0.08);
+  border-radius: 100px;
+  overflow: hidden;
+  position: relative;
+}
+
+.progress-fill {
+  height: 100%;
+  background: var(--gradient-warm);
+  border-radius: 100px;
+  transition: width 0.6s var(--ease-out-expo);
+  position: relative;
+}
+
+.progress-fill::after {
+  content: '';
+  position: absolute;
+  right: 0;
+  top: -2px;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--amber-light);
+  box-shadow: 0 0 12px rgba(245,158,11,0.6);
+}
+
+/* ====================== QUESTION SCREEN ====================== */
+.question-screen {
+  padding-top: 8px;
+  width: 100%;
+}
+
+.question-number {
+  font-family: var(--font-en);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--indigo-light);
+  margin-bottom: 12px;
+  opacity: 0.7;
+}
+
+.question-text {
+  font-size: 22px;
+  font-weight: 600;
+  line-height: 1.5;
+  margin-bottom: 28px;
+  color: var(--text-primary);
+}
+
+.question-hint {
+  font-size: 13px;
+  color: var(--text-dim);
+  margin-bottom: 20px;
+  margin-top: -16px;
+}
+
+/* ====================== OPTION CARDS ====================== */
+.options-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  width: 100%;
+}
+
+.option-card {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 16px 20px;
+  background: var(--gradient-card);
+  border: 1.5px solid rgba(255,255,255,0.07);
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition: all 0.3s var(--ease-out-expo);
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+  animation: optionIn 0.5s var(--ease-out-expo) both;
+  position: relative;
+  overflow: hidden;
+}
+
+.option-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, rgba(99,102,241,0.1) 0%, rgba(245,158,11,0.05) 100%);
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+.option-card:nth-child(1) { animation-delay: 0.05s; }
+.option-card:nth-child(2) { animation-delay: 0.1s; }
+.option-card:nth-child(3) { animation-delay: 0.15s; }
+.option-card:nth-child(4) { animation-delay: 0.2s; }
+.option-card:nth-child(5) { animation-delay: 0.25s; }
+
+@keyframes optionIn {
+  from { opacity: 0; transform: translateX(-20px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+.option-card:hover {
+  border-color: rgba(99,102,241,0.3);
+  background: var(--bg-card-hover);
+  transform: translateX(4px);
+}
+
+.option-card:hover::before { opacity: 1; }
+
+.option-card.selected {
+  border-color: var(--indigo-light);
+  background: var(--bg-card-selected);
+  transform: scale(1.02);
+  box-shadow: 0 0 24px rgba(99,102,241,0.15), inset 0 0 20px rgba(99,102,241,0.05);
+}
+
+.option-card.selected::after {
+  content: '✓';
+  position: absolute;
+  right: 16px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: var(--indigo-light);
+  color: white;
+  font-size: 13px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: checkPop 0.3s var(--ease-spring);
+}
+
+@keyframes checkPop {
+  from { transform: translateY(-50%) scale(0); }
+  to { transform: translateY(-50%) scale(1); }
+}
+
+.option-emoji {
+  font-size: 28px;
+  flex-shrink: 0;
+  width: 40px;
+  text-align: center;
+}
+
+.option-text {
+  font-size: 15px;
+  font-weight: 500;
+  line-height: 1.5;
+  color: var(--text-primary);
+  padding-right: 32px;
+}
+
+/* Multi-select */
+.option-card.multi.selected {
+  border-color: var(--amber);
+  box-shadow: 0 0 24px rgba(245,158,11,0.12);
+}
+
+.option-card.multi.selected::after {
+  background: var(--amber);
+}
+
+/* ====================== MULTI-SELECT FOOTER ====================== */
+.multi-footer {
+  margin-top: 24px;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  animation: fadeInUp 0.5s 0.3s var(--ease-out-expo) both;
+}
+
+.btn-next {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--font-thai);
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--bg-deep);
+  background: var(--gradient-warm);
+  border: none;
+  border-radius: 100px;
+  padding: 14px 36px;
+  cursor: pointer;
+  transition: all 0.3s var(--ease-out-expo);
+  box-shadow: 0 4px 20px rgba(99,102,241,0.25);
+}
+
+.btn-next:hover { transform: translateY(-2px); }
+.btn-next:active { transform: scale(0.97); }
+
+/* ====================== RESULTS SCREEN ====================== */
+.results {
+  padding-top: 5vh;
+  text-align: center;
+  width: 100%;
+}
+
+.result-reveal {
+  margin-bottom: 32px;
+}
+
+.result-profile-emoji {
+  font-size: 72px;
+  margin-bottom: 16px;
+  animation: bounceIn 0.8s var(--ease-spring) both;
+  display: inline-block;
+}
+
+@keyframes bounceIn {
+  from { transform: scale(0) rotate(-10deg); opacity: 0; }
+  to { transform: scale(1) rotate(0deg); opacity: 1; }
+}
+
+.result-profile-type {
+  font-family: var(--font-en);
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--amber);
+  margin-bottom: 8px;
+  animation: fadeInUp 0.6s 0.2s var(--ease-out-expo) both;
+}
+
+.result-profile-label {
+  font-size: 26px;
+  font-weight: 700;
+  margin-bottom: 8px;
+  animation: fadeInUp 0.6s 0.3s var(--ease-out-expo) both;
+}
+
+.result-profile-desc {
+  font-size: 15px;
+  color: var(--text-secondary);
+  line-height: 1.7;
+  max-width: 400px;
+  margin: 0 auto;
+  animation: fadeInUp 0.6s 0.4s var(--ease-out-expo) both;
+}
+
+/* Score Display */
+.score-display {
+  display: flex;
+  justify-content: center;
+  gap: 24px;
+  margin: 24px 0 32px;
+  animation: fadeInUp 0.6s 0.5s var(--ease-out-expo) both;
+}
+
+.score-ring {
+  width: 80px;
+  height: 80px;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.score-ring svg {
+  position: absolute;
+  inset: 0;
+  transform: rotate(-90deg);
+}
+
+.score-ring-bg { stroke: rgba(255,255,255,0.06); }
+
+.score-ring-fill {
+  stroke: url(#scoreGradient);
+  stroke-dasharray: 220;
+  stroke-dashoffset: 220;
+  transition: stroke-dashoffset 1.5s var(--ease-out-expo);
+}
+
+.score-number {
+  font-family: var(--font-en);
+  font-size: 22px;
+  font-weight: 800;
+  color: var(--text-primary);
+}
+
+.score-label {
+  font-size: 12px;
+  color: var(--text-dim);
+  margin-top: 6px;
+}
+
+/* Recommendation Cards */
+.rec-card-primary {
+  background: linear-gradient(145deg, rgba(99,102,241,0.12) 0%, rgba(245,158,11,0.08) 100%);
+  border: 1.5px solid rgba(99,102,241,0.2);
+  border-radius: var(--radius-lg);
+  padding: 28px 24px;
+  margin-bottom: 20px;
+  text-align: left;
+  position: relative;
+  overflow: hidden;
+  animation: fadeInUp 0.6s 0.6s var(--ease-out-expo) both;
+}
+
+.rec-card-primary::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  right: -50%;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(circle at 70% 30%, rgba(245,158,11,0.06), transparent 50%);
+  pointer-events: none;
+}
+
+.rec-badge {
+  display: inline-block;
+  font-family: var(--font-en);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--amber);
+  background: var(--amber-glow);
+  border: 1px solid rgba(245,158,11,0.2);
+  padding: 4px 14px;
+  border-radius: 100px;
+  margin-bottom: 16px;
+}
+
+.rec-program-name {
+  font-family: var(--font-en);
+  font-size: 20px;
+  font-weight: 700;
+  margin-bottom: 4px;
+  color: var(--text-primary);
+}
+
+.rec-program-thai {
+  font-size: 15px;
+  color: var(--text-secondary);
+  margin-bottom: 16px;
+}
+
+.rec-price {
+  font-family: var(--font-en);
+  font-size: 28px;
+  font-weight: 800;
+  background: var(--gradient-accent);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin-bottom: 20px;
+}
+
+.rec-benefits {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.rec-benefit {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  font-size: 14px;
+  color: var(--text-secondary);
+  line-height: 1.5;
+}
+
+.rec-benefit-icon {
+  color: var(--amber);
+  font-size: 16px;
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+
+.rec-roi {
+  background: rgba(245,158,11,0.08);
+  border: 1px solid rgba(245,158,11,0.15);
+  border-radius: var(--radius-sm);
+  padding: 14px 16px;
+  font-size: 14px;
+  color: var(--amber-light);
+  line-height: 1.5;
+  margin-bottom: 0;
+}
+
+.rec-roi-icon {
+  font-size: 18px;
+  margin-right: 6px;
+}
+
+/* Secondary recommendation */
+.rec-card-secondary {
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(255,255,255,0.07);
+  border-radius: var(--radius-md);
+  padding: 20px;
+  text-align: left;
+  margin-bottom: 28px;
+  animation: fadeInUp 0.6s 0.8s var(--ease-out-expo) both;
+}
+
+.rec-sec-label {
+  font-size: 12px;
+  color: var(--text-dim);
+  margin-bottom: 8px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  font-weight: 600;
+}
+
+.rec-sec-name {
+  font-family: var(--font-en);
+  font-size: 16px;
+  font-weight: 600;
+  margin-bottom: 4px;
+}
+
+.rec-sec-desc {
+  font-size: 13px;
+  color: var(--text-secondary);
+  line-height: 1.5;
+}
+
+/* CTA Area */
+.cta-area {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 20px;
+  width: 100%;
+  animation: fadeInUp 0.6s 1s var(--ease-out-expo) both;
+}
+
+.cta-hint {
+  font-size: 13px;
+  color: var(--text-dim);
+}
+
+/* Share area */
+.share-area {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  margin-bottom: 40px;
+  animation: fadeInUp 0.6s 1.1s var(--ease-out-expo) both;
+}
+
+/* Footer */
+.quiz-footer {
+  font-size: 12px;
+  color: var(--text-dim);
+  text-align: center;
+  padding: 20px 0;
+  border-top: 1px solid rgba(255,255,255,0.05);
+  margin-top: 20px;
+  width: 100%;
+  animation: fadeInUp 0.6s 1.2s var(--ease-out-expo) both;
+}
+
+.quiz-footer a {
+  color: var(--amber);
+  text-decoration: none;
+}
+
+/* ====================== CONFETTI ====================== */
+.confetti-container {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 100;
+  overflow: hidden;
+}
+
+.confetti-piece {
+  position: absolute;
+  top: -10px;
+  width: 10px;
+  height: 10px;
+  border-radius: 2px;
+  animation: confettiFall 3s ease-in forwards;
+}
+
+@keyframes confettiFall {
+  0% { transform: translateY(0) rotate(0deg); opacity: 1; }
+  100% { transform: translateY(100vh) rotate(720deg); opacity: 0; }
+}
+
+/* ====================== LOADING SCREEN ====================== */
+.loading-screen {
+  padding-top: 25vh;
+  text-align: center;
+}
+
+.loading-icon {
+  font-size: 48px;
+  margin-bottom: 24px;
+  animation: pulse 1.5s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { transform: scale(1); opacity: 0.8; }
+  50% { transform: scale(1.15); opacity: 1; }
+}
+
+.loading-text {
+  font-size: 18px;
+  font-weight: 500;
+  color: var(--text-secondary);
+  margin-bottom: 8px;
+}
+
+.loading-subtext {
+  font-size: 14px;
+  color: var(--text-dim);
+}
+
+.loading-bar {
+  width: 200px;
+  height: 4px;
+  background: rgba(255,255,255,0.08);
+  border-radius: 100px;
+  margin: 24px auto 0;
+  overflow: hidden;
+}
+
+.loading-bar-fill {
+  width: 0%;
+  height: 100%;
+  background: var(--gradient-warm);
+  border-radius: 100px;
+  animation: loadProgress 2.5s var(--ease-out-expo) forwards;
+}
+
+@keyframes loadProgress {
+  0% { width: 0%; }
+  40% { width: 60%; }
+  70% { width: 85%; }
+  100% { width: 100%; }
+}
+
+/* ====================== RESPONSIVE ====================== */
+@media (max-width: 400px) {
+  .welcome h1 { font-size: 24px; }
+  .question-text { font-size: 20px; }
+  .option-card { padding: 14px 16px; gap: 12px; }
+  .option-emoji { font-size: 24px; width: 34px; }
+  .option-text { font-size: 14px; }
+  .rec-program-name { font-size: 18px; }
+  .rec-price { font-size: 24px; }
+}
+
+@media (min-width: 768px) {
+  .app { padding: 24px; }
+  .welcome { padding-top: 12vh; }
+  .welcome h1 { font-size: 32px; }
+  .question-text { font-size: 24px; }
+}
+
+/* ====================== UTILITY ====================== */
+.hidden { display: none !important; }
+.text-center { text-align: center; }
+.mb-8 { margin-bottom: 8px; }
+.mb-16 { margin-bottom: 16px; }
+</style>
+</head>
+<body>
+
+<!-- Background Effects -->
+<div class="bg-gradient"></div>
+<div class="bg-orbs">
+  <div class="bg-orb"></div>
+  <div class="bg-orb"></div>
+  <div class="bg-orb"></div>
+</div>
+<div class="particles" id="particles"></div>
+
+<!-- App Container -->
+<div class="app" id="app">
+
+  <!-- WELCOME SCREEN -->
+  <div class="screen active" id="screen-welcome">
+    <div class="welcome">
+      <div class="welcome-badge">Limitless Club</div>
+      <div class="welcome-emoji">🤖✨</div>
+      <h1>คุณพร้อมแค่ไหน<br>สำหรับ <span class="gradient-text">โลก AI?</span></h1>
+      <p>ตอบ 8 คำถามง่ายๆ ใน 2 นาที<br>รับคำแนะนำคอร์สที่ใช่สำหรับคุณ</p>
+      <div class="welcome-features">
+        <div class="welcome-feature"><span>⏱️</span> 2 นาที</div>
+        <div class="welcome-feature"><span>🎯</span> 8 คำถาม</div>
+        <div class="welcome-feature"><span>💡</span> ผลลัพธ์ทันที</div>
+      </div>
+      <button class="btn-primary" onclick="startQuiz()">
+        เริ่มทำแบบทดสอบ 🚀
+      </button>
+    </div>
+  </div>
+
+  <!-- QUESTION SCREENS (generated by JS) -->
+  <div id="quiz-container"></div>
+
+  <!-- LOADING SCREEN -->
+  <div class="screen" id="screen-loading">
+    <div class="loading-screen">
+      <div class="loading-icon">🧠</div>
+      <div class="loading-text">กำลังวิเคราะห์โปรไฟล์ AI ของคุณ...</div>
+      <div class="loading-subtext">ใกล้เสร็จแล้ว!</div>
+      <div class="loading-bar"><div class="loading-bar-fill"></div></div>
+    </div>
+  </div>
+
+  <!-- RESULTS SCREEN -->
+  <div class="screen" id="screen-results"></div>
+
+</div>
+
+<!-- SVG Gradient Def -->
+<svg width="0" height="0" style="position:absolute">
+  <defs>
+    <linearGradient id="scoreGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#6366f1"/>
+      <stop offset="100%" stop-color="#f59e0b"/>
+    </linearGradient>
+  </defs>
+</svg>
+
+<script>
+// ====================== STATE ======================
+var quizState = {
+  currentQuestion: 0,
+  score: 0,
+  tags: {},
+  budget: null,
+  answers: [],
+  multiSelect: []
+};
+
+// ====================== QUESTIONS DATA ======================
+var questions = [
+  {
+    id: 1,
+    text: 'ตอนนี้คุณใช้ AI ในชีวิตประจำวันมากแค่ไหน? 🤔',
+    type: 'single',
+    options: [
+      { emoji: '🌱', text: 'ยังไม่เคยใช้เลย / ใช้น้อยมาก', score: 1, tags: {} },
+      { emoji: '🌿', text: 'ใช้บ้าง เช่น ChatGPT ถามคำถามทั่วไป', score: 2, tags: {} },
+      { emoji: '🌳', text: 'ใช้เป็นประจำ ช่วยงานหลายอย่าง', score: 3, tags: {} },
+      { emoji: '🚀', text: 'ใช้ทุกวัน AI เป็นเหมือนทีมงานของฉัน', score: 4, tags: {} }
+    ]
+  },
+  {
+    id: 2,
+    text: 'เป้าหมายหลักของคุณในการเรียนรู้ AI คืออะไร? 🎯',
+    type: 'single',
+    options: [
+      { emoji: '💼', text: 'อยากประหยัดเวลาทำงาน ให้ AI ช่วย', score: 0, tags: { efficiency: 1 } },
+      { emoji: '🎨', text: 'อยากสร้างคอนเทนต์ ภาพ วิดีโอ ด้วย AI', score: 0, tags: { creative: 1 } },
+      { emoji: '🤖', text: 'อยากสร้างระบบอัตโนมัติให้ธุรกิจ', score: 0, tags: { automation: 1 } },
+      { emoji: '🧠', text: 'อยากเข้าใจ AI ทั้งหมด เริ่มต้นจากศูนย์', score: 0, tags: { beginner: 1 } }
+    ]
+  },
+  {
+    id: 3,
+    text: 'คุณทำงานในบทบาทไหน? 👤',
+    type: 'single',
+    options: [
+      { emoji: '👑', text: 'เจ้าของธุรกิจ / CEO / Founder', score: 0, tags: { owner: 1 } },
+      { emoji: '💼', text: 'ผู้บริหาร / ผู้จัดการ', score: 0, tags: { exec: 1 } },
+      { emoji: '🎯', text: 'ฟรีแลนซ์ / ทำงานอิสระ', score: 0, tags: { freelance: 1 } },
+      { emoji: '📚', text: 'พนักงาน / กำลังหาทาง upskill', score: 0, tags: { employee: 1 } }
+    ]
+  },
+  {
+    id: 4,
+    text: 'อะไรคือความท้าทายที่สุดของคุณตอนนี้? 😤',
+    type: 'single',
+    options: [
+      { emoji: '⏰', text: 'ไม่มีเวลาพอ งานเยอะเกินไป', score: 0, tags: { efficiency: 1 } },
+      { emoji: '💸', text: 'ต้นทุนสูง จ้างคนเยอะแต่ผลงานไม่ทัน', score: 0, tags: { automation: 1 } },
+      { emoji: '📱', text: 'สร้างคอนเทนต์ไม่ทัน ต้องจ้างทีม creative', score: 0, tags: { creative: 1 } },
+      { emoji: '🤷', text: 'ไม่รู้จะเริ่มใช้ AI ยังไง', score: 0, tags: { beginner: 1 } }
+    ]
+  },
+  {
+    id: 5,
+    text: 'คุณเคยใช้เครื่องมือ AI ตัวไหนบ้าง? 🛠️',
+    hint: '(เลือกได้หลายข้อ)',
+    type: 'multi',
+    options: [
+      { emoji: '💬', text: 'ChatGPT', score: 1, tags: {} },
+      { emoji: '🧠', text: 'Claude', score: 1, tags: {} },
+      { emoji: '🎨', text: 'Midjourney / DALL·E / AI Image tools', score: 1, tags: { creative: 1 } },
+      { emoji: '✏️', text: 'Canva AI / FreePik AI', score: 1, tags: { creative: 1 } },
+      { emoji: '🆕', text: 'ยังไม่เคยใช้ตัวไหนเลย', score: 0, tags: {}, exclusive: true }
+    ]
+  },
+  {
+    id: 6,
+    text: 'ถ้าเลือกได้ คุณอยากได้ผลลัพธ์แบบไหนมากที่สุด? ✨',
+    type: 'single',
+    options: [
+      { emoji: '🕐', text: 'ได้เวลาคืน 10-15 ชม./สัปดาห์', score: 0, tags: { efficiency: 1 } },
+      { emoji: '🎬', text: 'สร้างคอนเทนต์ระดับมืออาชีพได้เอง', score: 0, tags: { creative: 1 } },
+      { emoji: '⚙️', text: 'มีระบบ AI ทำงานแทน 24/7', score: 0, tags: { automation: 1 } },
+      { emoji: '💰', text: 'ลดค่าใช้จ่ายพนักงาน/outsource', score: 0, tags: { efficiency: 1 } }
+    ]
+  },
+  {
+    id: 7,
+    text: 'สไตล์การเรียนรู้แบบไหนเหมาะกับคุณ? 📖',
+    type: 'single',
+    options: [
+      { emoji: '🏫', text: 'เรียนในห้อง ลงมือทำเลย', score: 0, tags: { workshop: 1 } },
+      { emoji: '📱', text: 'เรียนออนไลน์ ตามเวลาตัวเอง', score: 0, tags: { online: 1 } },
+      { emoji: '👥', text: 'มี community คอยช่วย ปรึกษาได้', score: 0, tags: { community: 1 } },
+      { emoji: '🎯', text: 'อยากได้คนมาทำให้เลย', score: 0, tags: { consulting: 1 } }
+    ]
+  },
+  {
+    id: 8,
+    text: 'งบประมาณที่คุณพร้อมลงทุนเพื่อ upskill AI? 💎',
+    type: 'single',
+    options: [
+      { emoji: '☕', text: 'ต่ำกว่า ฿5,000', score: 0, tags: {}, budget: 'low' },
+      { emoji: '💎', text: '฿5,000 - ฿15,000', score: 0, tags: {}, budget: 'mid' },
+      { emoji: '🏆', text: '฿15,000 - ฿50,000', score: 0, tags: {}, budget: 'high' },
+      { emoji: '🚀', text: 'มากกว่า ฿50,000 พร้อมลงทุนเต็มที่', score: 0, tags: {}, budget: 'premium' }
+    ]
+  }
+];
+
+// ====================== PARTICLES ======================
+function createParticles() {
+  var container = document.getElementById('particles');
+  for (var i = 0; i < 20; i++) {
+    var p = document.createElement('div');
+    p.className = 'particle';
+    p.style.left = Math.random() * 100 + '%';
+    p.style.animationDelay = Math.random() * 12 + 's';
+    p.style.animationDuration = (8 + Math.random() * 8) + 's';
+    p.style.width = p.style.height = (2 + Math.random() * 3) + 'px';
+    if (Math.random() > 0.5) {
+      p.style.background = '#6366f1';
+    }
+    container.appendChild(p);
+  }
+}
+createParticles();
+
+// ====================== NAVIGATION ======================
+function showScreen(id) {
+  var active = document.querySelector('.screen.active');
+  if (active) {
+    active.classList.add('exiting');
+    setTimeout(function() {
+      active.classList.remove('active', 'exiting');
+      var target = document.getElementById(id);
+      target.classList.add('active');
+    }, 300);
+  } else {
+    document.getElementById(id).classList.add('active');
+  }
+}
+
+// ====================== QUIZ START ======================
+function startQuiz() {
+  quizState = { currentQuestion: 0, score: 0, tags: {}, budget: null, answers: [], multiSelect: [] };
+  renderQuestion(0);
+  showScreen('screen-q0');
+}
+
+// ====================== RENDER QUESTION ======================
+function renderQuestion(idx) {
+  var q = questions[idx];
+  var container = document.getElementById('quiz-container');
+  var screenId = 'screen-q' + idx;
+
+  // Check if screen already exists
+  var existing = document.getElementById(screenId);
+  if (existing) {
+    existing.remove();
+  }
+
+  var html = '<div class="screen" id="' + screenId + '">';
+  
+  // Progress bar
+  html += '<div class="progress-container">';
+  html += '<div class="progress-info">';
+  html += '<span class="progress-step">' + (idx + 1) + ' / ' + questions.length + '</span>';
+  html += '<span class="progress-label">คำถามที่ ' + (idx + 1) + '</span>';
+  html += '</div>';
+  html += '<div class="progress-track">';
+  html += '<div class="progress-fill" style="width:' + ((idx + 1) / questions.length * 100) + '%"></div>';
+  html += '</div></div>';
+
+  // Question area
+  html += '<div class="question-screen">';
+  html += '<div class="question-text">' + q.text + '</div>';
+  if (q.hint) {
+    html += '<div class="question-hint">' + q.hint + '</div>';
+  }
+
+  html += '<div class="options-list">';
+  for (var i = 0; i < q.options.length; i++) {
+    var o = q.options[i];
+    var multiClass = q.type === 'multi' ? ' multi' : '';
+    html += '<div class="option-card' + multiClass + '" data-q="' + idx + '" data-o="' + i + '" onclick="selectOption(' + idx + ',' + i + ')">';
+    html += '<div class="option-emoji">' + o.emoji + '</div>';
+    html += '<div class="option-text">' + o.text + '</div>';
+    html += '</div>';
+  }
+  html += '</div>';
+
+  // Multi-select: show next button
+  if (q.type === 'multi') {
+    html += '<div class="multi-footer">';
+    html += '<button class="btn-next" onclick="confirmMulti(' + idx + ')">ถัดไป →</button>';
+    html += '</div>';
+  }
+
+  html += '</div></div>';
+
+  container.insertAdjacentHTML('beforeend', html);
+}
+
+// ====================== SELECT OPTION ======================
+function selectOption(qIdx, oIdx) {
+  var q = questions[qIdx];
+  var o = q.options[oIdx];
+
+  if (q.type === 'single') {
+    // Record answer
+    quizState.score += o.score;
+    addTags(o.tags);
+    if (o.budget) quizState.budget = o.budget;
+    quizState.answers[qIdx] = oIdx;
+
+    // Visual feedback
+    var cards = document.querySelectorAll('[data-q="' + qIdx + '"]');
+    for (var i = 0; i < cards.length; i++) {
+      cards[i].classList.remove('selected');
+    }
+    var selected = document.querySelector('[data-q="' + qIdx + '"][data-o="' + oIdx + '"]');
+    selected.classList.add('selected');
+
+    // Auto-advance after short delay
+    setTimeout(function() {
+      advanceQuestion(qIdx);
+    }, 400);
+  } else {
+    // Multi-select toggle
+    var card = document.querySelector('[data-q="' + qIdx + '"][data-o="' + oIdx + '"]');
+
+    // Handle exclusive option ("None")
+    if (o.exclusive) {
+      // Deselect all others
+      quizState.multiSelect = [oIdx];
+      var allCards = document.querySelectorAll('[data-q="' + qIdx + '"]');
+      for (var i = 0; i < allCards.length; i++) {
+        allCards[i].classList.remove('selected');
+      }
+      card.classList.add('selected');
+      return;
+    }
+
+    // If "None" was selected, deselect it
+    var noneIdx = -1;
+    for (var i = 0; i < q.options.length; i++) {
+      if (q.options[i].exclusive) noneIdx = i;
+    }
+    if (noneIdx >= 0) {
+      var nonePos = quizState.multiSelect.indexOf(noneIdx);
+      if (nonePos >= 0) {
+        quizState.multiSelect.splice(nonePos, 1);
+        var noneCard = document.querySelector('[data-q="' + qIdx + '"][data-o="' + noneIdx + '"]');
+        if (noneCard) noneCard.classList.remove('selected');
+      }
+    }
+
+    var pos = quizState.multiSelect.indexOf(oIdx);
+    if (pos >= 0) {
+      quizState.multiSelect.splice(pos, 1);
+      card.classList.remove('selected');
+    } else {
+      quizState.multiSelect.push(oIdx);
+      card.classList.add('selected');
+    }
+  }
+}
+
+function confirmMulti(qIdx) {
+  var q = questions[qIdx];
+  // Apply multi-select scores
+  for (var i = 0; i < quizState.multiSelect.length; i++) {
+    var o = q.options[quizState.multiSelect[i]];
+    quizState.score += o.score;
+    addTags(o.tags);
+  }
+  quizState.answers[qIdx] = quizState.multiSelect.slice();
+  quizState.multiSelect = [];
+  advanceQuestion(qIdx);
+}
+
+function addTags(tags) {
+  for (var key in tags) {
+    if (!quizState.tags[key]) quizState.tags[key] = 0;
+    quizState.tags[key] += tags[key];
+  }
+}
+
+// ====================== ADVANCE ======================
+function advanceQuestion(qIdx) {
+  var nextIdx = qIdx + 1;
+  if (nextIdx < questions.length) {
+    renderQuestion(nextIdx);
+    showScreen('screen-q' + nextIdx);
+  } else {
+    showScreen('screen-loading');
+    setTimeout(function() {
+      showResults();
+    }, 2800);
+  }
+}
+
+// ====================== RECOMMENDATION LOGIC ======================
+function getRecommendation() {
+  var s = quizState.score;
+  var tags = quizState.tags;
+  var budget = quizState.budget;
+
+  // Find dominant tag (among: beginner, efficiency, creative, automation)
+  var mainTags = ['beginner', 'efficiency', 'creative', 'automation'];
+  var dominant = 'beginner';
+  var maxVal = 0;
+  for (var i = 0; i < mainTags.length; i++) {
+    var v = tags[mainTags[i]] || 0;
+    if (v > maxVal) {
+      maxVal = v;
+      dominant = mainTags[i];
+    }
+  }
+
+  // Count how many distinct main tags have values
+  var tagCount = 0;
+  for (var i = 0; i < mainTags.length; i++) {
+    if (tags[mainTags[i]] > 0) tagCount++;
+  }
+
+  var primary, secondary;
+
+  // Budget override: high/premium + multiple tags → All-Access
+  if ((budget === 'high' || budget === 'premium') && tagCount >= 2) {
+    primary = {
+      name: 'All-Access Bundle',
+      thai: 'เรียนครบ 5 วัน ได้ทุกทักษะ ประหยัด 28%',
+      price: '฿49,900',
+      benefits: [
+        'ได้ทุกคอร์ส: Shortcut Day 1 + Day 2 + Creative AI + Advanced Automation',
+        'เข้าถึง Inner Circle community ตลอดชีพ',
+        'รับ 1-on-1 Consulting Session มูลค่า ฿15,000 ฟรี'
+      ],
+      roi: 'ประหยัดกว่าซื้อแยก 28% — เหมาะสำหรับคนที่พร้อมเปลี่ยนแปลงแบบเต็มที่',
+      profile: { emoji: '🚀', type: 'AI CEO', label: 'AI CEO', desc: 'คุณพร้อมจะเป็นผู้นำในยุค AI! คุณมีเป้าหมายหลากหลายและพร้อมลงทุนเต็มที่ — All-Access Bundle จะพาคุณไปถึงทุกเป้าหมาย' }
+    };
+    secondary = {
+      name: 'Done-With-You Implementation',
+      desc: 'หากต้องการให้ทีมผู้เชี่ยวชาญมาช่วย implement AI ในธุรกิจของคุณโดยตรง'
+    };
+  }
+  // Creative dominant
+  else if (dominant === 'creative') {
+    primary = {
+      name: 'Creative AI Expert',
+      thai: 'สร้างคอนเทนต์ระดับมืออาชีพ ไม่ต้องจ้างทีม creative',
+      price: '฿12,900',
+      benefits: [
+        'สร้างภาพ วิดีโอ กราฟิก ด้วย AI แบบมืออาชีพ',
+        'ลดต้นทุน outsource งาน creative ได้ 80%+',
+        'เรียนรู้เครื่องมือ AI สร้างคอนเทนต์ครบวงจร'
+      ],
+      roi: 'ประหยัดค่าจ้าง graphic designer / videographer เดือนละ ฿20,000-50,000+',
+      profile: { emoji: '🎨', type: 'AI Creator', label: 'AI Creator', desc: 'คุณมีหัวสร้างสรรค์และพร้อมจะปลดปล่อยพลัง AI ในงาน creative! เรียนรู้สร้างคอนเทนต์ระดับมืออาชีพได้ด้วยตัวเอง' }
+    };
+    secondary = {
+      name: 'Shortcut to AI Expert Day 1',
+      desc: 'เริ่มต้นปูพื้นฐาน AI ทั้งหมดก่อน แล้วค่อยต่อยอดสาย creative'
+    };
+  }
+  // Advanced: high score + automation
+  else if (s >= 8 && dominant === 'automation') {
+    primary = {
+      name: 'Advanced AI Automation',
+      thai: 'สร้างระบบ AI Agent ทำงานให้ 24/7',
+      price: '฿29,900',
+      benefits: [
+        'สร้าง AI Agent ที่ทำงานอัตโนมัติแทนคุณ 24/7',
+        'เรียนรู้ No-Code Automation + AI Workflow',
+        'ลดการจ้างพนักงาน / ลดต้นทุน operation ได้ 50%+'
+      ],
+      roi: 'ROI กลับมาใน 1-2 เดือน — ลดต้นทุนได้หลักแสนต่อปี',
+      profile: { emoji: '⚙️', type: 'AI Automator', label: 'AI Automator', desc: 'คุณเป็น power user ที่พร้อมจะสร้างระบบ AI ทำงานแทนทั้งองค์กร! Advanced Automation คือก้าวถัดไปที่ใช่สำหรับคุณ' }
+    };
+    secondary = {
+      name: 'Inner Circle Membership',
+      desc: 'เข้าร่วม community ผู้ใช้ AI ระดับสูง แลกเปลี่ยน use case และ update เครื่องมือใหม่ๆ'
+    };
+  }
+  // Efficiency dominant (mid range)
+  else if (dominant === 'efficiency' && s >= 5 && s <= 8) {
+    primary = {
+      name: 'Shortcut Day 1 + Day 2 Bundle',
+      thai: 'เรียนรู้ใช้ AI แล้วสั่ง AI ทำงานแทนได้ใน 2 วัน',
+      price: '฿22,900',
+      benefits: [
+        'Day 1: เข้าใจ AI ทั้งหมด + ใช้งานจริงได้ทันที',
+        'Day 2: สร้าง AI Workflow สั่งงาน AI ทำงานแทน',
+        'ประหยัดเวลาทำงาน 10-15 ชม. ต่อสัปดาห์'
+      ],
+      roi: 'ได้เวลาคืน 10-15 ชม./สัปดาห์ เท่ากับมีพนักงานเพิ่ม 1-2 คน',
+      profile: { emoji: '🧠', type: 'AI Strategist', label: 'AI Strategist', desc: 'คุณรู้จัก AI อยู่บ้างและพร้อมจะใช้มันให้เต็มศักยภาพ! Bundle 2 วันจะเปลี่ยนวิธีทำงานของคุณตลอดไป' }
+    };
+    secondary = tags.community ? {
+      name: 'Inner Circle Membership',
+      desc: 'เข้าร่วม community ปรึกษาผู้เชี่ยวชาญ AI ได้ตลอดหลังจบคอร์ส'
+    } : {
+      name: 'Creative AI Expert',
+      desc: 'ต่อยอดสร้างคอนเทนต์ด้วย AI เมื่อคุณพร้อม'
+    };
+  }
+  // Efficiency dominant but low score
+  else if (dominant === 'efficiency') {
+    primary = {
+      name: 'Shortcut to AI Expert Day 1',
+      thai: 'เริ่มต้นจากศูนย์ เข้าใจ AI ทั้งหมดใน 1 วัน',
+      price: '฿13,900',
+      benefits: [
+        'เข้าใจ AI ทั้งหมดใน 1 วัน ไม่ต้องมีพื้นฐาน',
+        'ลงมือใช้ ChatGPT, Claude, AI Tools จริง',
+        'ได้ template และ prompt พร้อมใช้งานทันที'
+      ],
+      roi: 'เริ่มประหยัดเวลา 5-10 ชม./สัปดาห์ ตั้งแต่สัปดาห์แรกหลังเรียน',
+      profile: { emoji: '🌱', type: 'AI Beginner', label: 'AI Starter', desc: 'คุณกำลังเริ่มต้นการเดินทางในโลก AI! Shortcut Day 1 จะช่วยให้คุณเข้าใจทุกอย่างและเริ่มใช้งานได้ทันที' }
+    };
+    secondary = {
+      name: 'Shortcut Day 2 (Add-on)',
+      desc: 'ต่อยอดสร้าง AI Workflow สั่งงาน AI ทำงานแทนคุณ'
+    };
+  }
+  // Automation dominant but low score
+  else if (dominant === 'automation') {
+    primary = {
+      name: 'Shortcut Day 1 + Day 2 Bundle',
+      thai: 'เรียนรู้ใช้ AI แล้วสั่ง AI ทำงานแทนได้ใน 2 วัน',
+      price: '฿22,900',
+      benefits: [
+        'Day 1: เข้าใจ AI ทั้งหมด + ใช้งานจริงได้ทันที',
+        'Day 2: สร้าง AI Workflow สั่งงาน AI ทำงานแทน',
+        'ปูพื้นฐานก่อนต่อยอด Advanced Automation'
+      ],
+      roi: 'ลดเวลาทำงานซ้ำๆ ได้ 50%+ ตั้งแต่สัปดาห์แรก',
+      profile: { emoji: '🧠', type: 'AI Strategist', label: 'AI Strategist', desc: 'คุณมีวิสัยทัศน์ด้าน automation! เริ่มจากพื้นฐานที่แข็งแกร่งก่อน แล้วต่อยอดสร้างระบบ AI อัตโนมัติ' }
+    };
+    secondary = {
+      name: 'Advanced AI Automation',
+      desc: 'ก้าวถัดไปหลังจบ Day 2 — สร้าง AI Agent ระดับ advanced'
+    };
+  }
+  // Default: Beginner
+  else {
+    primary = {
+      name: 'Shortcut to AI Expert Day 1',
+      thai: 'เริ่มต้นจากศูนย์ เข้าใจ AI ทั้งหมดใน 1 วัน',
+      price: '฿13,900',
+      benefits: [
+        'เข้าใจ AI ทั้งหมดใน 1 วัน ไม่ต้องมีพื้นฐาน',
+        'ลงมือใช้ ChatGPT, Claude, AI Tools จริง',
+        'ได้ template และ prompt พร้อมใช้งานทันที'
+      ],
+      roi: 'เริ่มประหยัดเวลา 5-10 ชม./สัปดาห์ ตั้งแต่สัปดาห์แรกหลังเรียน',
+      profile: { emoji: '🌱', type: 'AI Beginner', label: 'AI Starter', desc: 'คุณกำลังเริ่มต้นการเดินทางในโลก AI! Shortcut Day 1 จะช่วยให้คุณเข้าใจทุกอย่างและเริ่มใช้งานได้ทันที' }
+    };
+    secondary = {
+      name: 'Shortcut Day 2 (Add-on)',
+      desc: 'ต่อยอดสร้าง AI Workflow สั่งงาน AI ทำงานแทนคุณ'
+    };
+  }
+
+  // Override secondary for community/consulting tags
+  if (tags.community && tags.community > 0 && secondary.name !== 'Inner Circle Membership') {
+    secondary = {
+      name: 'Inner Circle Membership',
+      desc: 'เข้าร่วม community ปรึกษา AI Expert ได้ตลอด + อัพเดทเครื่องมือใหม่ทุกสัปดาห์'
+    };
+  }
+  if (tags.consulting && tags.consulting > 0) {
+    secondary = {
+      name: 'Done-With-You Implementation',
+      desc: 'ให้ทีมผู้เชี่ยวชาญมาช่วย implement AI ในธุรกิจคุณโดยตรง — เร็วกว่าเรียนเอง 10 เท่า'
+    };
+  }
+
+  return { primary: primary, secondary: secondary };
+}
+
+// ====================== SHOW RESULTS ======================
+function showResults() {
+  var rec = getRecommendation();
+  var p = rec.primary;
+  var sec = rec.secondary;
+  var profile = p.profile;
+
+  var maxScore = 4 + (questions[4].options.length - 1); // Q1 max(4) + Q5 max(4 tools)
+  var scorePercent = Math.min(Math.round((quizState.score / maxScore) * 100), 100);
+  var dashOffset = 220 - (220 * scorePercent / 100);
+
+  var html = '<div class="results">';
+
+  // Profile reveal
+  html += '<div class="result-reveal">';
+  html += '<div class="result-profile-emoji">' + profile.emoji + '</div>';
+  html += '<div class="result-profile-type">Your AI Profile</div>';
+  html += '<div class="result-profile-label">' + profile.label + '</div>';
+  html += '<div class="result-profile-desc">' + profile.desc + '</div>';
+  html += '</div>';
+
+  // Score ring
+  html += '<div class="score-display">';
+  html += '<div style="text-align:center">';
+  html += '<div class="score-ring">';
+  html += '<svg viewBox="0 0 80 80"><circle class="score-ring-bg" cx="40" cy="40" r="35" fill="none" stroke-width="5"/>';
+  html += '<circle class="score-ring-fill" cx="40" cy="40" r="35" fill="none" stroke-width="5" stroke-linecap="round" id="scoreCircle" style="stroke-dashoffset:220"/></svg>';
+  html += '<span class="score-number" id="scoreNum">0</span>';
+  html += '</div>';
+  html += '<div class="score-label">AI Score</div>';
+  html += '</div></div>';
+
+  // Primary recommendation
+  html += '<div class="rec-card-primary">';
+  html += '<div class="rec-badge">แนะนำสำหรับคุณ</div>';
+  html += '<div class="rec-program-name">' + p.name + '</div>';
+  html += '<div class="rec-program-thai">' + p.thai + '</div>';
+  html += '<div class="rec-price">' + p.price + '</div>';
+  html += '<ul class="rec-benefits">';
+  for (var i = 0; i < p.benefits.length; i++) {
+    html += '<li class="rec-benefit"><span class="rec-benefit-icon">✦</span><span>' + p.benefits[i] + '</span></li>';
+  }
+  html += '</ul>';
+  html += '<div class="rec-roi"><span class="rec-roi-icon">💡</span>' + p.roi + '</div>';
+  html += '</div>';
+
+  // Secondary
+  html += '<div class="rec-card-secondary">';
+  html += '<div class="rec-sec-label">ทางเลือกเพิ่มเติม</div>';
+  html += '<div class="rec-sec-name">' + sec.name + '</div>';
+  html += '<div class="rec-sec-desc">' + sec.desc + '</div>';
+  html += '</div>';
+
+  // CTA
+  html += '<div class="cta-area">';
+  html += '<a href="https://lin.ee/limitlessclub" target="_blank" rel="noopener noreferrer" class="btn-line">';
+  html += '<svg width="24" height="24" viewBox="0 0 24 24" fill="white"><path d="M19.365 9.863c.349 0 .63.285.63.631 0 .345-.281.63-.63.63H17.61v1.125h1.755c.349 0 .63.283.63.630 0 .344-.281.629-.63.629h-2.386c-.345 0-.627-.285-.627-.629V8.108c0-.345.282-.63.627-.63h2.386c.349 0 .63.285.63.63 0 .349-.281.63-.63.63H17.61v1.125h1.755zm-3.855 3.016c0 .27-.174.51-.432.596-.064.021-.133.031-.199.031-.211 0-.391-.09-.51-.25l-2.443-3.317v2.94c0 .344-.279.629-.631.629-.346 0-.626-.285-.626-.629V8.108c0-.271.173-.508.43-.595.06-.023.136-.033.194-.033.195 0 .375.104.495.254l2.462 3.33V8.108c0-.345.282-.63.63-.63.345 0 .63.285.63.63v4.771zm-5.741 0c0 .344-.282.629-.631.629-.345 0-.627-.285-.627-.629V8.108c0-.345.282-.63.627-.63.349 0 .631.285.631.63v4.771zm-2.466.629H4.917c-.345 0-.63-.285-.63-.629V8.108c0-.345.285-.63.63-.63.348 0 .63.285.63.63v4.141h1.756c.348 0 .629.283.629.630 0 .344-.282.629-.629.629M24 10.314C24 4.943 18.615.572 12 .572S0 4.943 0 10.314c0 4.811 4.27 8.842 10.035 9.608.391.082.923.258 1.058.59.12.301.079.766.038 1.08l-.164 1.02c-.045.301-.24 1.186 1.049.645 1.291-.539 6.916-4.078 9.436-6.975C23.176 14.393 24 12.458 24 10.314"/></svg>';
+  html += 'สมัครเรียนผ่าน LINE';
+  html += '</a>';
+  html += '<div class="cta-hint">แชทกับทีมงานเพื่อรับส่วนลดพิเศษ</div>';
+  html += '</div>';
+
+  // Share + Retake
+  html += '<div class="share-area">';
+  html += '<button class="btn-secondary" onclick="shareResults()">📤 แชร์ผลลัพธ์</button>';
+  html += '<button class="btn-secondary" onclick="retakeQuiz()">🔄 ทำใหม่</button>';
+  html += '</div>';
+
+  // Footer
+  html += '<div class="quiz-footer">By <a href="https://lin.ee/limitlessclub" target="_blank" rel="noopener noreferrer">Limitless Club</a> | Jedi Trinupab</div>';
+
+  html += '</div>';
+
+  var resultsScreen = document.getElementById('screen-results');
+  resultsScreen.innerHTML = html;
+
+  showScreen('screen-results');
+
+  // Animate score
+  setTimeout(function() {
+    var circle = document.getElementById('scoreCircle');
+    if (circle) circle.style.strokeDashoffset = dashOffset;
+    animateNumber('scoreNum', 0, quizState.score, 1200);
+  }, 600);
+
+  // Confetti
+  setTimeout(function() { fireConfetti(); }, 400);
+}
+
+// ====================== ANIMATE NUMBER ======================
+function animateNumber(elemId, start, end, duration) {
+  var elem = document.getElementById(elemId);
+  if (!elem) return;
+  var range = end - start;
+  var startTime = null;
+  function step(timestamp) {
+    if (!startTime) startTime = timestamp;
+    var progress = Math.min((timestamp - startTime) / duration, 1);
+    var eased = 1 - Math.pow(1 - progress, 3);
+    elem.textContent = Math.round(start + range * eased);
+    if (progress < 1) requestAnimationFrame(step);
+  }
+  requestAnimationFrame(step);
+}
+
+// ====================== CONFETTI ======================
+function fireConfetti() {
+  var container = document.createElement('div');
+  container.className = 'confetti-container';
+  document.body.appendChild(container);
+
+  var colors = ['#6366f1', '#f59e0b', '#fbbf24', '#7c3aed', '#ec4899', '#06C755', '#f472b6'];
+  for (var i = 0; i < 60; i++) {
+    var piece = document.createElement('div');
+    piece.className = 'confetti-piece';
+    piece.style.left = Math.random() * 100 + '%';
+    piece.style.background = colors[Math.floor(Math.random() * colors.length)];
+    piece.style.animationDelay = Math.random() * 1.5 + 's';
+    piece.style.animationDuration = (2 + Math.random() * 2) + 's';
+    piece.style.width = (6 + Math.random() * 8) + 'px';
+    piece.style.height = (6 + Math.random() * 8) + 'px';
+    if (Math.random() > 0.5) piece.style.borderRadius = '50%';
+    container.appendChild(piece);
+  }
+
+  setTimeout(function() { container.remove(); }, 5000);
+}
+
+// ====================== SHARE / RETAKE ======================
+function shareResults() {
+  var rec = getRecommendation();
+  var text = '🤖 ผลทดสอบ AI Readiness ของฉัน: ' + rec.primary.profile.label + ' ' + rec.primary.profile.emoji + '\n' +
+    'คอร์สที่แนะนำ: ' + rec.primary.name + '\n\n' +
+    'ลองทำแบบทดสอบ AI ของคุณ: ';
+
+  if (navigator.share) {
+    navigator.share({ title: 'AI Readiness Quiz', text: text }).catch(function(){});
+  } else if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(text).then(function() {
+      alert('คัดลอกผลลัพธ์แล้ว! วางในแชทได้เลย 📋');
+    }).catch(function() {
+      prompt('คัดลอกข้อความนี้:', text);
+    });
+  } else {
+    prompt('คัดลอกข้อความนี้:', text);
+  }
+}
+
+function retakeQuiz() {
+  // Clean up old question screens
+  var container = document.getElementById('quiz-container');
+  container.innerHTML = '';
+  startQuiz();
+}
+</script>
+</body>
+</html>
